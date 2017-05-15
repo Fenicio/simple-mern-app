@@ -3,11 +3,18 @@ import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-export default class ReviewContent extends Component {
-  constructor(props) {
-    super(props);
+const style = {
+  backButton: {
+    float: 'left',
+    marginTop: '16px'
+  },
+  submitButton: {
+    float: 'right',
+    marginTop: '16px'
   }
-  
+}
+
+export default class ReviewContent extends Component {
   render() {
     return (
       <div>
@@ -27,9 +34,11 @@ export default class ReviewContent extends Component {
         </div>
         <div>
           <RaisedButton label="Back" 
+            style={style.backButton}
             onTouchTap={this.props.onBackClick}
           />
           <RaisedButton label="Submit" 
+            style={style.submitButton}
             onTouchTap={this.props.onSubmit}
           />
         </div>

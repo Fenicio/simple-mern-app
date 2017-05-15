@@ -4,11 +4,17 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Toggle from 'material-ui/Toggle';
 
-export default class FormContent extends Component {
-  constructor(props) {
-    super(props);
+const style = {
+  toggle: {
+    paddingTop: '32px'
+  },
+  reviewButton: {
+    float: 'right',
+    marginTop: '16px'
   }
-  
+};
+
+export default class FormContent extends Component {
   render() {
     return (
       <div>
@@ -28,12 +34,14 @@ export default class FormContent extends Component {
         </div>
         <div>
           <Toggle label="I agree to the terms of service"
-            value={this.props.formData.termsAccepted}
-            onChange={(event) => this.props.onFieldChange('termsAccepted', event.target.value)}
+            style={style.toggle}
+            toggled={this.props.formData.termsAccepted}
+            onToggle={(event, value) => this.props.onFieldChange('termsAccepted', value)}
           />
         </div>
         <div>      
           <RaisedButton label="Review" 
+            style={style.reviewButton}
             onTouchTap={this.props.onReviewClick}
           />
         </div>

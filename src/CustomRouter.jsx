@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
-  Route,
-  Redirect
+  Route
 } from 'react-router-dom';
 import Top from './Top';
 import axios from 'axios';
@@ -14,8 +13,8 @@ const FINAL = 'FINAL';
 const style = {
   container: {
     width: '60%',
-    'max-width': '800px',
-    'min-width': '400px',
+    'maxWidth': '800px',
+    'minWidth': '400px',
     margin: 'auto'
   }
 };
@@ -32,9 +31,10 @@ export default class CustomRouter extends Component {
     };
   }
   
-  onFormChange = (newTab, id) => {
+  onFormChange = (newTab) => {
     const currentFormData = this.state.formData;
-    if(currentFormData.id) {
+    const id = currentFormData._id
+    if(id) {
       axios.post('/api/', currentFormData).then((res) => {
         this.setState({formData: res.data});
         this.router.history.push('/'+newTab+'/'+res.data._id);
@@ -68,8 +68,9 @@ export default class CustomRouter extends Component {
       }});
     }
   }
-  
-  onFieldChange = (field, value) =>{
+
+  onFieldChange = (field, value) => {
+    console.log("onFieldChange(", field,", ",value,")");
     const currentFormData = this.state.formData;
     currentFormData[field] = value;
     this.setState({formData: currentFormData});
@@ -100,18 +101,12 @@ export default class CustomRouter extends Component {
           onFieldChange={this.onFieldChange}
           />)} 
         />
-        <Route exact path='/REVIEW'
-          component={(match) => (<Redirect to='/FORM' />)} 
-        />
         <Route path='/REVIEW/:id' render={(match) => ( <Top 
           onFormChange={this.onFormChange} 
           selectedTab={REVIEW}
           formData={this.state.formData} 
           onFieldChange={this.onFieldChange}
           />)} 
-        />
-        <Route exact path='/FINAL'
-          component={(match) => (<Redirect to='/FORM' />)} 
         />
         <Route path='/FINAL/:id' render={(match) => ( <Top 
           onFormChange={this.onFormChange} 

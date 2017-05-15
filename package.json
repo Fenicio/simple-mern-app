@@ -21,7 +21,10 @@
   },
   "devDependencies": {
     "concurrently": "^3.4.0",
-    "react-scripts": "0.9.5"
+    "enzyme": "^2.8.2",
+    "mocha": "^3.4.1",
+    "react-scripts": "0.9.5",
+    "react-test-renderer": "^15.5.4"
   },
   "proxy": "http://localhost:3001/",
   "scripts": {

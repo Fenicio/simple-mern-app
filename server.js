@@ -39,7 +39,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/:id', function(req, res) {
-  FormData.find({ObjectId: req.params.id}, function(err, singleFormData) {
+  FormData.find({_id: req.params.id}, function(err, singleFormData) {
     if(err) res.send(err);
 
     res.json(singleFormData);
@@ -48,7 +48,7 @@ router.get('/:id', function(req, res) {
 
 router.post('/', function(req, res) {
   const singleFormData = new FormData();
-  singleFormData.ObjectId = req.body.ObjectId || undefined;
+  singleFormData._id = req.body._id || undefined;
   singleFormData.name = req.body.name;
   singleFormData.company = req.body.company;
   singleFormData.termsAccepted = req.body.termsAccepted;
