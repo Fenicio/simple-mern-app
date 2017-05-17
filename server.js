@@ -67,4 +67,6 @@ app.listen(port, function() {
 });
 
 //db config
+var connectionAddress = process.env.IP || 'localhost';
+mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://'+process.env.IP+'/db');
