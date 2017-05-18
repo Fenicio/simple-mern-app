@@ -29,6 +29,8 @@ export default class CustomRouter extends Component {
         termsAccepted: false
       }
     };
+    
+    this.referencedId = null;
   }
   
   onFormChange = (newTab) => {
@@ -47,31 +49,39 @@ export default class CustomRouter extends Component {
     }
     this.router.history.push('/'+newTab+(id ? '/'+id : ''));
     this.router.forceUpdate();
-    
+  }
+
+  onFieldChange = (field, value) => {
+    const currentFormData = this.state.formData;
+    currentFormData[field] = value;
+    this.setState({formData: currentFormData});
+  }
+  
+  componentDidMount = () => {
+    let id = this.referencedId;
     if (id) {
       console.log("Getting api/"+id);
       axios.get('/api/'+id).then((response) => {
         this.setState({
-          formData: response
+          formData: response.data
         });
       }).catch((error) => {
         console.error('error', error);
         //TODO
       });
-    } else {
-      this.setState({ formData: {
-        name: '',
-        company: '',
-        termsAccepted: false
-      }});
     }
   }
-
-  onFieldChange = (field, value) => {
-    console.log("onFieldChange(", field,", ",value,")");
-    const currentFormData = this.state.formData;
-    currentFormData[field] = value;
-    this.setState({formData: currentFormData});
+  
+  renderTopWithMatch = (match, phase) => {
+    if(this.referencedId === null && match.match && match.match.params && match.match.params.id) {
+      this.referencedId = match.match.params.id;
+    }
+    return ( <Top 
+          onFormChange={this.onFormChange} 
+          selectedTab={phase}
+          formData={this.state.formData} 
+          onFieldChange={this.onFieldChange}
+          />);
   }
   
   render() {
@@ -92,26 +102,11 @@ export default class CustomRouter extends Component {
           onFieldChange={this.onFieldChange}
           />)} 
         />
-        <Route path='/FORM/:id' render={(match) => ( <Top 
-          onFormChange={this.onFormChange} 
-          selectedTab={FORM}
-          formData={this.state.formData} 
-          onFieldChange={this.onFieldChange}
-          />)} 
+        <Route path='/FORM/:id' render={(match) => this.renderTopWithMatch(match, FORM)} 
         />
-        <Route path='/REVIEW/:id' render={(match) => ( <Top 
-          onFormChange={this.onFormChange} 
-          selectedTab={REVIEW}
-          formData={this.state.formData} 
-          onFieldChange={this.onFieldChange}
-          />)} 
+        <Route path='/REVIEW/:id' render={(match) => this.renderTopWithMatch(match, REVIEW)} 
         />
-        <Route path='/FINAL/:id' render={(match) => ( <Top 
-          onFormChange={this.onFormChange} 
-          selectedTab={FINAL}
-          formData={this.state.formData} 
-          onFieldChange={this.onFieldChange}
-          />)} 
+        <Route path='/FINAL/:id' render={(match) => this.renderTopWithMatch(match, FINAL)} 
         />
       </div>
     </Router>

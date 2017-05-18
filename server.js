@@ -39,9 +39,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/:id', function(req, res) {
-  console.log('router.get /:id req.params:', req.params, 'req.body', req.body);
   FormData.findById(req.params.id, function(err, singleFormData) {
-    console.log('FormData.findById(_id:',req.params.id,').singleFormData: ',singleFormData);
     if(err) res.send(err);
 
     res.json(singleFormData);
@@ -49,35 +47,35 @@ router.get('/:id', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  console.log("router.post[/] (", req.body, ")");
-  const singleFormData = new FormData();
   if(req.body._id) {
-    singleFormData._id = req.body._id;
-  }
-  singleFormData.name = req.body.name;
-  singleFormData.company = req.body.company;
-  singleFormData.termsAccepted = req.body.termsAccepted;
-  if(!singleFormData._id) {
-    singleFormData.save(function(err, dBResponse) {
-      if(err) { res.send(err); return; }
-      console.log("insert.dbResponse: ", dBResponse);
-      res.json(dBResponse);
-    });
-  } else {
-    FormData.update({ name: singleFormData.name, 
-      company: singleFormData.company, 
-      termsAccepted: singleFormData.termsAccepted}, {
-        _id: singleFormData._id
+    FormData.findById(req.body._id, function(err, singleFormData) {
+      singleFormData.name = req.body.name;
+      singleFormData.company = req.body.company;
+      singleFormData.termsAccepted = req.body.termsAccepted;
+      FormData.update(singleFormData, {
+          _id: singleFormData._id
       }, function(err, dBResponse) {
         if(err) { res.send(err); return; }
-        console.log('update.dbResponse: ', dBResponse);
         res.send(singleFormData);
       });
+    });
+  } else {
+    const singleFormData = new FormData();
+    singleFormData.name = req.body.name;
+    singleFormData.company = req.body.company;
+    singleFormData.termsAccepted = req.body.termsAccepted;
+    singleFormData.save(function(err, dBResponse) {
+      if(err) { res.send(err); return; }
+      res.json(dBResponse);
+    });
   }
 });
 
 //Use our router configuration when we call /api
 app.use('/api', router);
+
+// Disable etag generation because cache issues
+app.disable('etag');
 
 //starts the server and listens for requests
 app.listen(port, function() {
