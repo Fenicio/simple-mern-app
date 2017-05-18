@@ -10,7 +10,7 @@ const style = {
   },
   reviewButton: {
     float: 'right',
-    marginTop: '16px'
+    marginTop: '36px'
   }
 };
 

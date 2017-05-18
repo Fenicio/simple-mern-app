@@ -13,8 +13,8 @@ const FINAL = 'FINAL';
 const style = {
   container: {
     width: '60%',
-    'maxWidth': '800px',
-    'minWidth': '400px',
+    maxWidth: '800px',
+    minWidth: '400px',
     margin: 'auto'
   }
 };
@@ -49,16 +49,14 @@ export default class CustomRouter extends Component {
     this.router.forceUpdate();
     
     if (id) {
-      axios.get('/api/'+id).then(function (response) {
+      console.log("Getting api/"+id);
+      axios.get('/api/'+id).then((response) => {
         this.setState({
           formData: response
         });
-      }).catch(function(error) {
-        this.setState({ formData: {
-          name: '',
-          company: '',
-          termsAccepted: false
-        }});
+      }).catch((error) => {
+        console.error('error', error);
+        //TODO
       });
     } else {
       this.setState({ formData: {

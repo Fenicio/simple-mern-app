@@ -39,7 +39,9 @@ router.get('/', function(req, res) {
 });
 
 router.get('/:id', function(req, res) {
-  FormData.find({_id: req.params.id}, function(err, singleFormData) {
+  console.log('router.get /:id req.params:', req.params, 'req.body', req.body);
+  FormData.findById(req.params.id, function(err, singleFormData) {
+    console.log('FormData.findById(_id:',req.params.id,').singleFormData: ',singleFormData);
     if(err) res.send(err);
 
     res.json(singleFormData);
@@ -47,15 +49,31 @@ router.get('/:id', function(req, res) {
 });
 
 router.post('/', function(req, res) {
+  console.log("router.post[/] (", req.body, ")");
   const singleFormData = new FormData();
-  singleFormData._id = req.body._id || undefined;
+  if(req.body._id) {
+    singleFormData._id = req.body._id;
+  }
   singleFormData.name = req.body.name;
   singleFormData.company = req.body.company;
   singleFormData.termsAccepted = req.body.termsAccepted;
-  singleFormData.save(function(err, dBResponse) {
-    if(err) res.send(err);
-    res.json(dBResponse);
-  })
+  if(!singleFormData._id) {
+    singleFormData.save(function(err, dBResponse) {
+      if(err) { res.send(err); return; }
+      console.log("insert.dbResponse: ", dBResponse);
+      res.json(dBResponse);
+    });
+  } else {
+    FormData.update({ name: singleFormData.name, 
+      company: singleFormData.company, 
+      termsAccepted: singleFormData.termsAccepted}, {
+        _id: singleFormData._id
+      }, function(err, dBResponse) {
+        if(err) { res.send(err); return; }
+        console.log('update.dbResponse: ', dBResponse);
+        res.send(singleFormData);
+      });
+  }
 });
 
 //Use our router configuration when we call /api

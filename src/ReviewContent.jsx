@@ -6,11 +6,11 @@ import RaisedButton from 'material-ui/RaisedButton';
 const style = {
   backButton: {
     float: 'left',
-    marginTop: '16px'
+    marginTop: '36px'
   },
   submitButton: {
     float: 'right',
-    marginTop: '16px'
+    marginTop: '36px'
   }
 }
 
