@@ -9,8 +9,13 @@ This project is a sample app using these technologies:
 
 
 ### How to use
+Clone this project
 
-To execute it have a mongoDB instance running and execute:
+Run ``npm install``
+
+Run your mongod instance
+
+Run
 ``npm run start-dev``
 
 
